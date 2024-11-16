@@ -167,7 +167,7 @@ void initTextures()
     loadTexture("./res/textures/wall.png", &wallTexture);
     setupTexture(&wallTexture); 
 
-    loadTexture("./res/textures/tile.png", &floorTexture);
+    loadTexture("./res/textures/wood.png", &floorTexture);
     setupTexture(&floorTexture);
 
     loadTexture("./res/textures/window.png", &windowTexture);
@@ -283,20 +283,20 @@ void setupLightning()
 
     glEnable(GL_LIGHT0);
     glPushMatrix();
-        glTranslatef(roomWidth / 2, roomHeight - 0.5, -(roomWidth / 2));
-        GLfloat light0_position[]	= {0, 0, 0, 1};
-        glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+    glTranslatef(roomWidth / 2, roomHeight - 0.5, -(roomWidth / 2));
+    GLfloat light0_position[]	= {0, 0, 0, 1};
+    glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
     glPopMatrix();
 
     if (light1_enabled) {
         glEnable(GL_LIGHT1);
         glPushMatrix();
-            glTranslatef(light1_offset[0], light1_offset[1], light1_offset[2]);
+        glTranslatef(light1_offset[0], light1_offset[1], light1_offset[2]);
 
-            glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
-            glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, light1_angle);
-            glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, light1_direction);
-            glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, light1_exponent);
+        glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+        glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, light1_angle);
+        glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, light1_direction);
+        glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, light1_exponent);
         glPopMatrix();
     }
 }
@@ -358,6 +358,7 @@ void display(void)
     
     ambient.active();
 
+    /*
     // Bedside table
     glPushMatrix();
         glTranslatef(2, 0, -10);
@@ -379,7 +380,7 @@ void display(void)
         glTexCoordPointer(2, GL_FLOAT, 0, &bedsideMesh.vertices_tex_coords[0]);
         glNormalPointer(GL_FLOAT, 0, &bedsideMesh.vertices_normals[0]);
         glDrawElements(GL_TRIANGLES, bedsideMesh.indices_pointers.size(), GL_UNSIGNED_INT, &bedsideMesh.indices_pointers[0]);
-        
+
         glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
@@ -685,9 +686,9 @@ void display(void)
         glPopMatrix();
 
         glFlush();
-    glPopMatrix();
-    
+    glPopMatrix();*/
 
+    // Рисуем стены, пол и потолок
     buildFrontWall(&wallTexture);
     buildBackWall(&wallTexture);
     buildLeftWall(&wallTexture);
@@ -695,41 +696,46 @@ void display(void)
     buildRoof(&wallTexture);
     buildFloor(&floorTexture);
 
+    // Рисуем дверной проем и дверь в нем
     buildDoorFrame(&wallTexture);
+//    checkDoorAngle();
+//    buildDoor(&doorTexture, doorAngle);
 
-    checkDoorAngle();
-    buildDoor(&doorTexture, doorAngle);
-
-    glPushMatrix();
+    // Рисуем картину над столом
+    /*glPushMatrix();
         glRotatef(180, 0, 1, 0);
         glTranslatef(-roomWidth + 3.5, 6, roomWidth - 0.1);
         buildBoard(&homeOfficeTexture, rgb(154, 149, 143), {1.5, 1.8618, 0.1});
-    glPopMatrix();
+    glPopMatrix();*/
 
-    glPushMatrix();
+    // Рисуем картину Ван-Гога
+/*    glPushMatrix();
         glTranslatef(5.25, 4, -roomWidth + 0.1);
         glRotatef(180, 0, 1, 0);
         buildBoard(&vanGoghTexture, rgb(154, 149, 143), {4.5, 3, 0.1});
-    glPopMatrix();
+    glPopMatrix();*/
 
     buildTable(false);
     // buildTable(true);
 
-    checkWindowTranslation();
-    glPushMatrix();
+    // Рисуем окно
+//    checkWindowTranslation();
+/*    glPushMatrix();
         glTranslatef(windowPosition.x + 0.2, windowPosition.y + 0.2, -(roomWidth + 0.4));
         buildWindowGlass();
-    glPopMatrix();
+    glPopMatrix();*/
 
-    glPushMatrix();
+    // Рисуем окно
+/*    glPushMatrix();
         GLfloat windowTranslationOffset = ((windowDimention.x - (2 * windowDimention.z)) / 2) * windowTranslation;
         glTranslatef((windowPosition.x) + windowTranslationOffset, windowPosition.y + 0.2, -(roomWidth + 0.6));
         buildWindowGlass();
-    glPopMatrix();
+    glPopMatrix();*/
+//    buildWindow(silver);
 
-    buildShelfWithBooks();
 
-    buildWindow(silver);
+     // Рисуем полку с книгами
+//    buildShelfWithBooks();
 
     glutSwapBuffers();
 }
@@ -828,7 +834,7 @@ int main(int argc, char** argv)
     glutInitWindowSize(windows_w, windows_h);
     glutInitWindowPosition(100, 100);
     
-    glutCreateWindow("Trabalho Final - CG");
+    glutCreateWindow("3D Room");
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
